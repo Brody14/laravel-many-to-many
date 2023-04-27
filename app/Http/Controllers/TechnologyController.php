@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Technology;
 use App\Http\Requests\StoreTechnologyRequest;
 use App\Http\Requests\UpdateTechnologyRequest;
+use App\Models\Project;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class TechnologyController extends Controller
 {
@@ -13,9 +16,19 @@ class TechnologyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $trashed = $request->input('trashed');
+
+        if ($trashed) {
+            $technologies = Technology::onlyTrashed()->get();
+        } else {
+            $technologies = Technology::all();
+        }
+
+        $in_trash = Technology::onlyTrashed()->count();
+
+        return view('technologies.index', compact('technologies', 'in_trash'));
     }
 
     /**
@@ -25,7 +38,7 @@ class TechnologyController extends Controller
      */
     public function create()
     {
-        //
+        return view('technologies.create')->with('success', 'Technology created successfully');
     }
 
     /**
@@ -36,7 +49,11 @@ class TechnologyController extends Controller
      */
     public function store(StoreTechnologyRequest $request)
     {
-        //
+        $validated = $request->validated();
+        $validated['slug'] =  Str::slug($validated['name']);
+
+        $new_tec = Technology::create($validated);
+        return to_route('technologies.show', $new_tec);
     }
 
     /**
@@ -47,7 +64,8 @@ class TechnologyController extends Controller
      */
     public function show(Technology $technology)
     {
-        //
+        $projects = Project::all()->pluck('id')->all();
+        return view('technologies.show', compact('technology', 'projects'));
     }
 
     /**
@@ -58,7 +76,7 @@ class TechnologyController extends Controller
      */
     public function edit(Technology $technology)
     {
-        //
+        return view('technologies.edit', compact('technology'));
     }
 
     /**
@@ -70,7 +88,22 @@ class TechnologyController extends Controller
      */
     public function update(UpdateTechnologyRequest $request, Technology $technology)
     {
-        //
+        $validated = $request->validated();
+        if ($validated['name'] !== $technology->name) {
+            $validated['slug'] =  Str::slug($validated['name']);
+        }
+
+        $technology->update($validated);
+        return to_route('technologies.show', $technology)->with('update', 'Technology updated');
+    }
+
+    public function restore(Technology $technology)
+    {
+        if ($technology->trashed()) {
+            $technology->restore();
+        }
+
+        return back()->with('success', 'Technology restored successfully');
     }
 
     /**
@@ -81,6 +114,12 @@ class TechnologyController extends Controller
      */
     public function destroy(Technology $technology)
     {
-        //
+        if ($technology->trashed()) {
+            $technology->forceDelete();
+            return to_route('technologies.index')->with('message', 'Technology deleted');
+        }
+
+        $technology->delete();
+        return back()->with('moved', 'Technology moved to trash');
     }
 }
