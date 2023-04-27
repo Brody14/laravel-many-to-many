@@ -25,11 +25,21 @@
           <div class="col">
               <h3 class="project_title">Title: {{$project->title}}</h3>
               
+             <div class="d-flex gap-2">
                 @if($project->type)
                   <span class="badge text-bg-success mb-4 py-2">{{ $project->type->name }}</span>
                 @else
-                  <span class="badge text-bg-secondary mb-4 py-2"> Nessun Tipo </span>
+                  <span class="badge text-bg-secondary mb-4 py-2"> No Types </span>
                 @endif
+
+                <ul class="p-0">
+                  @forelse ($project->technologies as $tec)
+                    <li><span class="badge rounded-pill text-bg-primary"> {{ $tec->name}} </span></li>
+                  @empty
+                    <li><span class="badge rounded-pill text-bg-primary"> No technologies </span></li>
+                  @endforelse
+                </ul>
+             </div>
                 
               <p class="m-0"><strong>Description:</strong></p>
               @if (!$project->description)
