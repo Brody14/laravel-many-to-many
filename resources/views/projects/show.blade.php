@@ -27,14 +27,24 @@
               
              <div class="d-flex gap-2 align-items-center mb-4">
                 @if($project->type)
-                  <span class="badge text-bg-success py-2">{{ $project->type->name }}</span>
+                  <span class="badge text-bg-success py-2">
+                    <a class="text-white" href="{{ route('types.show', $project->type)}}"> 
+                      {{ $project->type->name }} 
+                    </a>
+                  </span>
                 @else
                   <span class="badge text-bg-secondary py-2"> No Types </span>
                 @endif
 
                 <ul class="p-0 m-0 d-flex gap-2">
                   @forelse ($project->technologies as $tec)
-                    <li><span class="badge rounded-pill text-bg-primary"> {{ $tec->name}} </span></li>
+                    <li>
+                      <span class="badge rounded-pill text-bg-primary">
+                        <a class="text-white" href="{{ route('technologies.show', $tec) }}">
+                          {{ $tec->name}}
+                        </a> 
+                      </span>
+                    </li>
                   @empty
                     <li><span class="badge rounded-pill text-bg-primary"> No technologies </span></li>
                   @endforelse
@@ -53,5 +63,24 @@
           </div>
       </div>
   </div>
+
+  <div class="container">
+    <h5>Related Project</h5>
+    @if ($project->type)
+      <ul class="p-0">
+        @foreach($project->getRelatedProjects() as $related)
+          <li>
+              <a href="{{ route('projects.show', $related)}}">
+                {{ $related->title}}
+              </a>
+          </li>
+        @endforeach
+
+        @else
+          <li>No matches found</li>
+        @endif
+      </ul>
+  </div>
+
 
 @endsection

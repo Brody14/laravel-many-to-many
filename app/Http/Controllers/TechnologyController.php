@@ -64,8 +64,7 @@ class TechnologyController extends Controller
      */
     public function show(Technology $technology)
     {
-        $projects = Project::orderBy('title')->get();
-        return view('technologies.show', compact('technology', 'projects'));
+        return view('technologies.show', compact('technology'));
     }
 
     /**

@@ -25,9 +25,8 @@
           <div class="col">
               <h3>Name: {{$technology->name}}</h3>
               <h5 class="mb-5">ID: {{ $technology->id }} </h5>
-              {{-- <p>{{ $technology->pivot->project_id}}</p> --}}
+              <h5>Related Projects</h5>
               <ul class="p-0">
-                <h5>Related Projects</h5>
                 @forelse ($technology->projects as $project)
                   <li><a href="{{ route('projects.show', $project)}}">{{ $project->title }} </a> </li>        
                 @empty
