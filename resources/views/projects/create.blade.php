@@ -60,12 +60,32 @@
                 @endforeach
             </select>
             @error('type_id')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
             @enderror
         </div>
 
+        <div class="mb-3">
+            <label for="technologies" class="form-label">Technologies</label>
+               <div class="d-flex gap-3 @error('technologies') is-invalid @enderror">
+                @foreach ($technologies as $key => $tec)
+                    <div class="form-check">
+                        <input @checked(in_array($tec->id, old('technologies', []))) name="technologies[]" class="form-check-input" id="technologies" type="checkbox" value="{{ $tec->id}}">
+                        <label class="form-check-label" for="technologies">
+                            {{ $tec->name}}
+                        </label> 
+                    </div>
+                @endforeach
+               </div>
+
+            @error('technologies')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+            
 
         <a href="{{route('projects.index')}}" class="btn btn-primary mb-3" role="button">Back</a>
         <button type="submit" class="btn btn-primary mb-3">Save</button>
