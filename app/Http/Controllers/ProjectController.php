@@ -61,6 +61,11 @@ class ProjectController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
 
         $new_project = Project::create($validated);
+
+        if (isset($validated['technologies'])) {
+            $new_project->technologies()->attach($validated['technologies']);
+        }
+
         return to_route('projects.show', $new_project)->with('success', 'Project created successfully');
     }
 
@@ -84,8 +89,9 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $types = Type::orderBy('name')->get();
+        $technologies = Technology::orderBy('name')->get();
 
-        return view('projects.edit', compact('project', 'types'));
+        return view('projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -104,6 +110,12 @@ class ProjectController extends Controller
         }
 
         $project->update($validated);
+
+        if (isset($validated['technologies'])) {
+            $project->technologies()->sync($validated['technologies']);
+        } else {
+            $project->technologies()->sync([]);
+        }
 
         return to_route('projects.show', $project)->with('update', 'Project updated');
     }

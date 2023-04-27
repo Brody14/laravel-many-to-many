@@ -28,4 +28,9 @@ class Project extends Model
     {
         return $this->belongsToMany(Technology::class);
     }
+
+    public function getTecIds()
+    {
+        return $this->technologies->pluck('id')->all();
+    }
 }

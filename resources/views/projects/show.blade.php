@@ -25,14 +25,14 @@
           <div class="col">
               <h3 class="project_title">Title: {{$project->title}}</h3>
               
-             <div class="d-flex gap-2">
+             <div class="d-flex gap-2 align-items-center mb-4">
                 @if($project->type)
-                  <span class="badge text-bg-success mb-4 py-2">{{ $project->type->name }}</span>
+                  <span class="badge text-bg-success py-2">{{ $project->type->name }}</span>
                 @else
-                  <span class="badge text-bg-secondary mb-4 py-2"> No Types </span>
+                  <span class="badge text-bg-secondary py-2"> No Types </span>
                 @endif
 
-                <ul class="p-0">
+                <ul class="p-0 m-0 d-flex gap-2">
                   @forelse ($project->technologies as $tec)
                     <li><span class="badge rounded-pill text-bg-primary"> {{ $tec->name}} </span></li>
                   @empty
