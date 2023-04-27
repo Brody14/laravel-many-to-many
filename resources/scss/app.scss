@@ -1,0 +1,13 @@
+
+@import '~bootstrap/scss/bootstrap';
+
+@import './partials/reset';
+
+
+.project_title {
+    text-transform: capitalize;
+}
+
+.project_add {
+    font-size: 30px;
+}
