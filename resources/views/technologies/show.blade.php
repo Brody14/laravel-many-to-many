@@ -25,6 +25,16 @@
           <div class="col">
               <h3>Name: {{$technology->name}}</h3>
               <h5 class="mb-5">ID: {{ $technology->id }} </h5>
+              {{-- <p>{{ $technology->pivot->project_id}}</p> --}}
+              <ul class="p-0">
+                <h5>Related Projects</h5>
+                @forelse ($technology->projects as $project)
+                  <li><a href="{{ route('projects.show', $project)}}">{{ $project->title }} </a> </li>        
+                @empty
+                   <li>No matches found </li>
+                @endforelse 
+    
+              </ul>
           </div>
       </div>
   </div>
