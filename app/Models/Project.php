@@ -16,7 +16,8 @@ class Project extends Model
         'slug',
         'customer',
         'url',
-        'type_id'
+        'type_id',
+        'user_id'
     ];
 
     public function type()
@@ -27,6 +28,11 @@ class Project extends Model
     public function technologies()
     {
         return $this->belongsToMany(Technology::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getTecIds()

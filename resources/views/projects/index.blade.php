@@ -29,7 +29,11 @@
               @foreach ($projects as $project)
                   <tr>
                     <td class="project_title">
-                        <a href="{{ route('projects.show',$project) }}">{{ $project->title }}</a>
+                      <a href="{{ route('projects.show',$project) }}">{{ $project->title }}</a>
+                      <p class="mb-0"> 
+                        {{ optional($project->user)->name }}
+                      </p>
+                     
                     </td>
                     <td>{{ $project->description }}</td>
                     <td> <a href="{{ $project->url }}">Visit</a></td>

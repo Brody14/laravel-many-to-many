@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -59,6 +60,7 @@ class ProjectController extends Controller
         $validated = $request->validated();
 
         $validated['slug'] = Str::slug($validated['title']);
+        $validated['user_id'] = Auth::id();
 
         $new_project = Project::create($validated);
 
@@ -77,6 +79,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $this->authorize('view', $project);
         $types = Type::orderBy('name')->get();
         return view('projects.show', compact('project', 'types'));
     }
@@ -89,6 +92,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        $this->authorize('update', $project);
         $types = Type::orderBy('name')->get();
         $technologies = Technology::orderBy('name')->get();
 
@@ -104,6 +108,7 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
+        $this->authorize('update', $project);
         $validated = $request->validated();
 
         if ($validated['title'] !== $project->title) {
@@ -138,6 +143,8 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $this->authorize('delete', $project);
+
         if ($project->trashed()) {
             $project->forceDelete();
             return to_route('projects.index')->with('message', 'Project deleted');
