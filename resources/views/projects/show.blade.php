@@ -66,8 +66,8 @@
 
   <div class="container">
     <h5>Related Project</h5>
-    @if ($project->type)
-      <ul class="p-0">
+    <ul class="p-0">
+      @if ($project->type)
         @foreach($project->getRelatedProjects() as $related)
           <li>
               <a href="{{ route('projects.show', $related)}}">
@@ -79,7 +79,7 @@
         @else
           <li>No matches found</li>
         @endif
-      </ul>
+    </ul>
   </div>
 
 
