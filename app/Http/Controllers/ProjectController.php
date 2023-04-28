@@ -21,6 +21,7 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
 
+
         //creazione vista cestino
         $trashed = $request->input('trashed');
 
@@ -79,7 +80,6 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $this->authorize('view', $project);
         $types = Type::orderBy('name')->get();
         return view('projects.show', compact('project', 'types'));
     }
@@ -92,7 +92,6 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        $this->authorize('update', $project);
         $types = Type::orderBy('name')->get();
         $technologies = Technology::orderBy('name')->get();
 
@@ -108,7 +107,6 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        $this->authorize('update', $project);
         $validated = $request->validated();
 
         if ($validated['title'] !== $project->title) {
@@ -143,7 +141,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        $this->authorize('delete', $project);
+
 
         if ($project->trashed()) {
             $project->forceDelete();
@@ -152,5 +150,11 @@ class ProjectController extends Controller
 
         $project->delete();
         return back()->with('moved', 'Project moved to trash');
+    }
+
+    public function __construct()
+    {
+        //gestione autorizzazioni
+        $this->authorizeResource(Project::class, 'project');
     }
 }
